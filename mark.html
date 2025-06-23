@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Markdown Live Editor</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .panel {
+      width: 33.33%;
+      padding: 16px;
+      box-sizing: border-box;
+      overflow: auto;
+      border-right: 1px solid #ddd;
+    }
+    .panel:last-child {
+      border-right: none;
+    }
+    textarea, pre {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      font-family: monospace;
+      font-size: 14px;
+      border: none;
+      resize: none;
+      background-color: #f9f9f9;
+      padding: 12px;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .preview {
+      background: #fff;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h3>Input</h3>
+    <textarea id="inputText">Introduction to Computing
+CSC1001
+This module is intended to be at an introductory level to provide an overview of the different modules taught in the computing science programme. The purpose is to enable students to appreciate the relevance and interrelationships of different modules without being lost in the details, as well as to instill a computing science mindset in them. Specifically, this module covers wide variety of topics ranging from binary number systems, the building blocks of hardware, the building blocks of software, to algorithms, database and security.</textarea>
+  </div>
+
+  <div class="panel">
+    <h3>Markdown</h3>
+    <pre id="markdownOutput"></pre>
+  </div>
+
+  <div class="panel preview">
+    <h3>Preview</h3>
+    <div id="markdownPreview"></div>
+  </div>
+
+  <script>
+    const input = document.getElementById('inputText');
+    const markdownOutput = document.getElementById('markdownOutput');
+    const preview = document.getElementById('markdownPreview');
+
+    function convertToMarkdown(text) {
+      const lines = text.split('\n').map(line => line.trim()).filter(Boolean);
+      let md = '';
+      if (lines.length >= 2) {
+        md += `# ${lines[0]}\n\n`;
+        md += `**Module Code**: ${lines[1]}\n\n`;
+        md += lines.slice(2).join('\n\n');
+      } else {
+        md = text;
+      }
+      return md;
+    }
+
+    function update() {
+      const markdown = convertToMarkdown(input.value);
+      markdownOutput.textContent = markdown;
+      preview.innerHTML = marked.parse(markdown);
+    }
+
+    input.addEventListener('input', update);
+    window.addEventListener('load', update);
+  </script>
+</body>
+</html>
